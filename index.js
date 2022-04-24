@@ -16,6 +16,9 @@ async function run() {
             res.send('Hello crazy World!')
         })
         app.get('/products', async (req, res) => {
+            const page = Number(req.query.page)
+            const size = Number(req.query.size)
+            console.log(page, size)
             const query = {}
             const cursor = productCollection.find(query)
             const products = await cursor.toArray()
