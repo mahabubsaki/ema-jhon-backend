@@ -10,7 +10,7 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 async function run() {
     try {
-        client.connect()
+        await client.connect()
         const productCollection = client.db("emaJhon").collection("products");
         app.get('/', (req, res) => {
             res.send('Hello crazy World!')
@@ -21,6 +21,13 @@ async function run() {
             const products = await cursor.toArray()
             res.send(products)
         })
+        app.get('/productsCount', async (req, res) => {
+            const query = {}
+            const cursor = productCollection.find(query)
+            const count = await cursor.count()
+            res.send({ count })
+        })
+
     }
     finally {
 
