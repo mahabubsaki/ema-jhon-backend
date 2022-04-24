@@ -5,7 +5,7 @@ const app = express()
 const port = process.env.PORT || 5000
 app.use(cors())
 app.use(express.json())
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.wcxgg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 async function run() {
@@ -28,7 +28,13 @@ async function run() {
             res.send({ count })
         })
         app.post('/productFindByKey', async (req, res) => {
-
+            const keys = req.body
+            const ids = keys.map((key) => ObjectId(key))
+            const query = { _id: { $in: ids } }
+            const cursor = productCollection.find(query)
+            const products = await cursor.toArray()
+            console.log(products)
+            res.send(products)
         })
     }
     finally {
