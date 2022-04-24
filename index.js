@@ -24,9 +24,7 @@ async function run() {
             res.send(products)
         })
         app.get('/productsCount', async (req, res) => {
-            const query = {}
-            const cursor = productCollection.find(query)
-            const count = await cursor.count()
+            const count = await productCollection.estimatedDocumentCount()
             res.send({ count })
         })
 
